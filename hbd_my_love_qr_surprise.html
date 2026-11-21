@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love 💖</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pastelPink: '#FFD1DC',
+                        softPink: '#FFB6C1',
+                        roseGold: '#B76E79',
+                        blush: '#FFF0F5',
+                        lavender: '#E6E6FA',
+                        warmCream: '#FFFDF9',
+                        cutePurple: '#D8B4FE',
+                    },
+                    fontFamily: {
+                        cursive: ['Dancing Script', 'cursive'],
+                        cute: ['Fredoka', 'sans-serif'],
+                        body: ['Nunito', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-gentle': 'bounceGentle 2s infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(5deg)' },
+                        },
+                        bounceGentle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Glassmorphism */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffeaf0 50%, #f3e8ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .glass-card-pink {
+            background: rgba(255, 240, 245, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 182, 193, 0.4);
+        }
+
+        /* Envelope Flip animation */
+        .perspective {
+            perspective: 1000px;
+        }
+        
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .envelope-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* Floating background elements */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff0f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffb6c1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff8da1;
+        }
+
+        /* Cute Polaroid Styling */
+        .polaroid {
+            background: white;
+            padding: 12px 12px 24px 12px;
+            box-shadow: 0 10px 25px -5px rgba(255, 182, 193, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .polaroid:hover {
+            transform: translateY(-8px) rotate(1deg) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(255, 182, 193, 0.7);
+        }
+    </style>
+</head>
+<body class="text-gray-700 relative pb-16 selection:bg-softPink selection:text-white">
+
+    <!-- Canvas Background for Floating Hearts & Particles -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Top Music Control Header -->
+    <header class="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <button id="confetti-btn" onclick="triggerConfetti()" class="glass-card px-4 py-2 rounded-full shadow-lg hover:scale-105 active:scale-95 transition flex items-center gap-2 text-roseGold font-cute text-sm">
+            <span>🎉 Sparkles</span>
+        </button>
+        <button id="music-btn" onclick="toggleAudio()" class="glass-card w-10 h-10 rounded-full shadow-lg hover:scale-105 active:scale-95 transition flex items-center justify-center text-roseGold">
+            <i id="music-icon" class="fas fa-music text-lg animate-pulse"></i>
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-md mx-auto px-4 pt-8 pb-12 flex flex-col gap-8">
+
+        <!-- HERO SECTION -->
+        <section class="text-center pt-6 flex flex-col items-center">
+            <!-- Cute Animated Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card-pink text-pink-600 font-cute text-sm mb-4 animate-bounce-gentle shadow-sm">
+                <span class="animate-spin-slow">✨</span> Special Day for My Favorite Person <span class="animate-spin-slow">✨</span>
+            </div>
+
+            <!-- Main Greeting Title -->
+            <h1 class="font-cursive text-5xl sm:text-6xl text-rose-500 font-bold mb-2 drop-shadow-sm leading-tight">
+                From Your Home To <br/>
+                
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500">
+                My Dearest Love!
+                </span> 💖
+            </h1>
+            
+            <p class="font-cute text-gray-500 text-base mb-6">22 November • Everyday with you is a gift ✨</p>
+
+            <!-- Birthday Countdown / Today is the Day Pill -->
+            <div id="countdown-container" class="glass-card w-full p-4 rounded-3xl shadow-sm text-center border-pink-200">
+                <p class="text-xs font-semibold text-rose-400 uppercase tracking-wider mb-2">Countdown to 22 November 🎂</p>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-white/80 p-2 rounded-2xl shadow-inner">
+                        <span id="days" class="block font-cute text-2xl font-bold text-rose-500">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-bold">Days</span>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-2xl shadow-inner">
+                        <span id="hours" class="block font-cute text-2xl font-bold text-rose-500">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-bold">Hours</span>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-2xl shadow-inner">
+                        <span id="minutes" class="block font-cute text-2xl font-bold text-rose-500">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-bold">Mins</span>
+                    </div>
+                    <div class="bg-white/80 p-2 rounded-2xl shadow-inner">
+                        <span id="seconds" class="block font-cute text-2xl font-bold text-rose-500">00</span>
+                        <span class="text-[10px] text-gray-400 uppercase font-bold">Secs</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE LOVE LETTER SECTION -->
+        <section class="flex flex-col items-center">
+            <div class="w-full text-center mb-3">
+                <h2 class="font-cute text-2xl text-gray-800 flex items-center justify-center gap-2">
+                    <span>💌</span> A Letter For You
+                </h2>
+                <p class="text-xs text-gray-500">Click the envelope to open your birthday letter!</p>
+            </div>
+
+            <!-- Envelope Container -->
+            <div class="w-full perspective">
+                <div id="envelope" onclick="openLetter()" class="cursor-pointer glass-card-pink rounded-3xl p-6 text-center transition-all duration-500 shadow-md hover:shadow-xl relative overflow-hidden group">
+                    
+                    <div id="envelope-closed-content" class="flex flex-col items-center py-6 gap-3">
+                        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner text-3xl group-hover:scale-110 transition">
+                            ✉️
+                        </div>
+                        <span class="font-cute text-rose-500 font-medium">Tap to open with love ❤️</span>
+                    </div>
+
+                    <!-- Letter content hidden inside -->
+                    <div id="letter-content" class="hidden text-left py-2 space-y-4 font-body animate-fadeIn max-h-[70vh] overflow-y-auto pr-2">
+                        <div class="flex justify-between items-center border-b border-pink-200 pb-3 sticky top-0 bg-[#FFF0F5]/90 backdrop-blur-sm z-10">
+                            <span class="font-cursive text-2xl text-rose-500 font-bold">Happy Birthday, my favorite girl. 🤍</span>
+                            <span class="text-xs text-pink-500 font-cute font-semibold">22 Nov 🎉</span>
+                        </div>
+
+                        <p class="text-sm text-gray-700 leading-relaxed font-semibold text-rose-500">
+                            Selamat bertambah usia, cantikkuuu.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Hari ini adalah hari lahir seseorang yang begitu berarti dalam hidup mas. Seseorang yang sudah menjadi bagian dari perjalanan panjang mas, sejak kita masih duduk di bangku SMP, ketika kita belum benar-benar mengerti apa arti mencintai, mempertahankan, kehilangan, memaafkan, dan bertumbuh bersama.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Kalau mas boleh jujur, terkadang mas masih nggak menyangka kita bisa sampai sejauh ini. Kita sudah melewati banyak hal. Ada tawa, kebahagiaan, cerita-cerita sederhana, jarak yang harus kita hadapi, bahkan ada masa ketika kita saling menyakiti dan hampir kehilangan arah. Kita pernah berada di titik yang mungkin tidak pernah kita bayangkan sebelumnya. Namun, di antara semua cerita itu, mas tetap bersyukur pernah dipertemukan dengan adek.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Di hari spesial adek ini, mas ingin mengucapkan terima kasih. Terima kasih karena pernah hadir dalam kehidupan mas. Terima kasih untuk setiap waktu, perhatian, cerita, tawa, dan hal-hal kecil yang mungkin bagi adek biasa saja, tetapi punya tempat tersendiri di ingatan mas. Terima kasih sudah menjadi bagian dari masa muda mas, bagian dari cerita yang akan selalu mas ingat sebagai salah satu perjalanan paling berarti dalam hidup.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas juga ingin meminta maaf. Maaf untuk semua kesalahan mas, baik yang pernah terjadi maupun yang mungkin masih mas lakukan sampai sekarang. Mas tahu mas bukan seseorang yang sempurna. Mas pernah mengecewakan adek, pernah merusak kepercayaan yang seharusnya mas jaga, dan terkadang cara mas menyampaikan rasa takut justru membuat adek merasa lelah. Mas nggak ingin menutupi semua itu hanya dengan mengatakan bahwa mas sudah berubah. Mas ingin terus belajar membuktikannya melalui tindakan.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas juga sadar bahwa adek punya perjalanan, perasaan, dan luka yang mungkin belum sepenuhnya mas pahami. Maaf kalau terkadang mas terlalu sibuk dengan ketakutan mas sendiri sampai lupa bahwa adek juga ingin didengarkan dan dimengerti. Mas berharap, seiring bertambahnya usia kita, kita juga bisa semakin dewasa dalam memahami satu sama lain.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Sayang, mas tahu perjalanan kita belum selalu mudah. Jarak membuat mas nggak bisa selalu berada di samping adek. Mas nggak bisa tiba-tiba datang ketika adek sedang lelah, nggak bisa langsung menggenggam tangan adek ketika adek sedang sedih, dan nggak bisa memberikan pelukan setiap kali adek membutuhkan seseorang untuk menenangkan hati. Terkadang mas hanya bisa menemani lewat layar, lewat pesan singkat, atau lewat suara yang kita dengarkan dari kejauhan.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Tapi ada satu hal yang ingin mas sampaikan: meskipun mas belum bisa hadir secara langsung, mas tetap berharap adek selalu punya banyak alasan untuk bahagia. Jangan sampai kehidupan adek hanya berputar pada hubungan kita. Kejarlah semua impian adek, nikmati masa muda adek, tumbuh menjadi perempuan yang semakin kuat, dan jangan pernah berhenti mempercayai kemampuan diri sendiri.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas ingin melihat adek berhasil dengan semua hal yang sedang adek perjuangkan. Mas ingin melihat adek tersenyum karena berhasil mencapai sesuatu yang selama ini adek impikan. Mas ingin suatu hari nanti kita bisa menceritakan kembali masa-masa sulit ini sambil tersenyum, karena ternyata kita pernah melewati banyak hal dan belajar menjadi manusia yang lebih baik.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas juga punya banyak harapan untuk kita. Bukan sekadar tentang bertahan atau tetap bersama, tetapi tentang bagaimana kita bisa menciptakan hubungan yang membuat kita berdua merasa aman, dihargai, didengarkan, dan dicintai. Mas ingin kita menjadi dua orang yang tidak lagi sibuk menghitung siapa yang paling banyak berkorban, tetapi mulai belajar bagaimana saling menjaga.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas nggak tahu bagaimana persisnya perjalanan kita ke depan. Mas juga nggak bisa menjanjikan bahwa semuanya akan selalu berjalan sesuai keinginan kita. Namun, selama kita masih sama-sama memiliki keinginan untuk memperbaiki diri dan menjaga hubungan ini, mas berharap kita tidak berhenti belajar.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Untuk hari ini, jangan terlalu memikirkan hal-hal yang membuat adek sedih, ya. Berikan sedikit ruang untuk diri sendiri agar bisa menikmati hari kelahiran adek. Adek pantas mendapatkan kebahagiaan, ketenangan, kasih sayang, dan hal-hal baik yang mungkin selama ini adek harapkan.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Semoga di usia yang baru ini, segala doa baik adek menemukan jalannya. Semoga langkah adek dimudahkan, kesehatan selalu menyertai, hati adek semakin tenang, rezeki adek dilapangkan, dan semua impian yang sedang adek perjuangkan satu per satu bisa terwujud.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Dan kalau suatu hari nanti adek merasa lelah dengan perjalanan hidup, semoga adek selalu ingat bahwa adek sudah berjalan sejauh ini. Jangan terlalu keras kepada diri sendiri. Adek juga manusia yang boleh lelah, boleh menangis, boleh melakukan kesalahan, dan tetap layak mendapatkan kebahagiaan.
+                        </p>
+
+                        <p class="text-sm text-rose-500 font-cute font-bold text-base pt-2">
+                            Happy birthday, Fitri.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Terima kasih sudah menjadi bagian dari cerita hidup mas. Mas nggak ingin hanya menjadi seseorang yang mengucapkan selamat ulang tahun setiap tahunnya. Mas ingin menjadi seseorang yang juga belajar menghargai, mendengarkan, memahami, dan ikut mendukung perjalanan hidup adek.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Semoga suatu saat nanti, ketika kita membaca kembali ucapan ini, kita sudah berada di titik kehidupan yang lebih baik. Semoga jarak yang sekarang memisahkan kita tidak selamanya menjadi penghalang untuk saling bertemu. Dan semoga masih ada banyak kesempatan bagi kita untuk menciptakan kenangan-kenangan indah yang belum sempat kita miliki.
+                        </p>
+
+                        <p class="text-sm text-gray-700 leading-relaxed font-semibold">
+                            Once again, happy birthday, my dearest.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Tetaplah menjadi Fitri yang punya banyak mimpi, banyak harapan, dan banyak alasan untuk tersenyum. Jangan pernah merasa bahwa adek harus menjadi sempurna untuk layak dicintai.
+                        </p>
+
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            Mas sayang adek. Terima kasih sudah pernah, sedang, dan menjadi bagian yang begitu berarti dalam perjalanan hidup mas.
+                        </p>
+
+                        <div class="text-right pt-4 border-t border-pink-200">
+                            <span class="font-cursive text-2xl text-rose-500 font-bold block">With all my love,</span>
+                            <span class="font-cute text-sm text-gray-600 font-semibold">From Your Home. 🤍</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             PHOTO MEMORY GALLERY (CARA GANTI FOTO & KETERANGAN)
+             Ganti link di dalam src="..." dengan link foto kalian
+        ========================================================== -->
+        <section class="space-y-4">
+            <div class="text-center">
+                <h2 class="font-cute text-2xl text-gray-800 flex items-center justify-center gap-2">
+                    <span>📸</span> Our memory
+                </h2>
+                <p class="text-xs text-gray-500">Tap photos to send heart reactions!</p>
+            </div>
+
+            <!-- Carousel Slider / Polaroid Cards Grid -->
+            <div class="grid grid-cols-1 gap-6">
+                <!-- FOTO POLAROID 1 -->
+                <div class="polaroid rounded-2xl transform -rotate-2 relative group">
+                    <div class="relative overflow-hidden rounded-lg aspect-square bg-pink-100 flex items-center justify-center">
+                        <!-- Ganti link gambar di bawah ini -->
+                        <img src="https://i.ibb.co.com/Y71P6Y5M/Whats-App-Image-2025-11-21-at-14-50-31-116d4502.jpg" 
+                             alt="Cute couple memory" 
+                             class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition duration-500"
+                             onerror="this.src='https://placehold.co/400x400/FFD1DC/B76E79?text=Cute+Moment+1'" />
+                        <button onclick="likePhoto(this, event)" class="absolute bottom-3 right-3 bg-white/80 backdrop-blur-md w-10 h-10 rounded-full flex items-center justify-center text-rose-500 shadow-lg hover:scale-110 active:scale-95 transition">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <!-- Ganti teks caption foto 1 di bawah ini -->
+                    <div class="pt-3 text-center">
+                        <p class="font-cursive text-xl text-gray-700">our memory 😊</p>
+                        <p class="text-[11px] text-gray-400 font-cute">making memories with you</p>
+                    </div>
+                </div>
+
+                <!-- FOTO POLAROID 2 -->
+                <div class="polaroid rounded-2xl transform rotate-2 relative group">
+                    <div class="relative overflow-hidden rounded-lg aspect-square bg-purple-100 flex items-center justify-center">
+                        <!-- Ganti link gambar di bawah ini -->
+                        <img src="https://i.ibb.co.com/rfmQ0tmw/Whats-App-Image-2025-11-21-at-08-59-20-fe9947ea.jpg" alt
+                             alt="Romantic moment" 
+                             class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition duration-500"
+                             onerror="this.src='https://placehold.co/400x400/E6E6FA/B76E79?text=Cute+Moment+2'" />
+                        <button onclick="likePhoto(this, event)" class="absolute bottom-3 right-3 bg-white/80 backdrop-blur-md w-10 h-10 rounded-full flex items-center justify-center text-rose-500 shadow-lg hover:scale-110 active:scale-95 transition">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <!-- Ganti teks caption foto 2 di bawah ini -->
+                    <div class="pt-3 text-center">
+                        <p class="font-cursive text-xl text-gray-700">you're very beautiful✨</p>
+                
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             SPECIAL WISH MAKER & HEART CONFETTI CANNON
+        ========================================================== -->
+        <section class="glass-card-pink p-6 rounded-3xl text-center space-y-4">
+            <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-sm">
+                🎂
+            </div>
+            <h2 class="font-cute text-xl text-gray-800 font-semibold">Make A Birthday Wish!</h2>
+            <p class="text-xs text-gray-500">Tulis keinginan atau harapan manis kamu hari ini...</p>
+            
+            <div class="space-y-3">
+                <input id="wish-input" type="text" placeholder="Ketik doa atau keinginan kamu..." class="w-full px-4 py-3 rounded-2xl bg-white/90 border border-pink-200 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder:text-gray-400">
+                <button onclick="sendWish()" class="w-full py-3 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-400 text-white font-cute font-medium text-sm shadow-md hover:opacity-95 active:scale-95 transition">
+                    Blow Candles & Send Wish ✨
+                </button>
+                <button onclick="triggerHeartConfetti()" class="w-full py-2.5 rounded-2xl bg-white/80 border border-pink-200 text-rose-500 font-cute font-medium text-xs shadow-sm hover:bg-white active:scale-95 transition flex items-center justify-center gap-1.5">
+                    <span>💖</span> Send Love Celebration <span>🎉</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center pt-4 pb-2 text-xs text-gray-400 font-cute space-y-1">
+            <p>Made with ❤️ specially for Fitri on her Birthday</p>
+            <p>© 2026 • Forever & Always</p>
+        </footer>
+
+    </main>
+
+    <!-- CUSTOM MESSAGE TOAST (PENGGANTI POPUP ALERT) -->
+    <div id="custom-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 hidden transition-all duration-300 w-[90%] max-w-sm">
+        <div class="glass-card bg-white/95 border-pink-300 px-5 py-3.5 rounded-2xl shadow-xl text-center">
+            <p id="toast-message" class="font-cute text-sm text-rose-500 font-medium"></p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* -------------------------------------------------------------
+           1. FLOATING HEARTS CANVAS ANIMATION
+        ------------------------------------------------------------- */
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 14 + 8;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.6;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                this.emojis = ['💖', '🌸', '✨', '💕', '🤍'];
+                this.emoji = this.emojis[Math.floor(Math.random() * this.emojis.length)];
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.font = `${this.size}px Arial`;
+                ctx.fillText(this.emoji, this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        function initHearts() {
+            hearts = [];
+            for (let i = 0; i < 25; i++) {
+                const h = new HeartParticle();
+                h.y = Math.random() * canvas.height;
+                hearts.push(h);
+            }
+        }
+
+        function animateHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animateHearts);
+        }
+
+        initHearts();
+        animateHearts();
+
+        /* -------------------------------------------------------------
+           2. COUNTDOWN TIMER TO 22 NOVEMBER
+        ------------------------------------------------------------- */
+        function updateCountdown() {
+            const now = new Date();
+            let targetYear = now.getFullYear();
+            const targetDate = new Date(targetYear, 10, 22, 0, 0, 0); // Month is 0-indexed (10 = November)
+
+            // If Nov 22 has passed this year (from Nov 23 onwards), target next year
+            if (now.getMonth() === 10 && now.getDate() > 22 || now.getMonth() > 10) {
+                targetDate.setFullYear(targetYear + 1);
+            }
+
+            const diff = targetDate - now;
+            const container = document.getElementById('countdown-container');
+
+            // If today is November 22!
+            if (now.getMonth() === 10 && now.getDate() === 22) {
+                container.innerHTML = `
+                    <p class="font-cursive text-3xl text-rose-500 font-bold animate-pulse">
+                        🎉 Today is Your Special Day! Happy Birthday Fitri! 🎂
+                    </p>
+                `;
+                return;
+            }
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* -------------------------------------------------------------
+           3. INTERACTIVE LOVE LETTER ENVELOPE
+        ------------------------------------------------------------- */
+        let isLetterOpen = false;
+        function openLetter() {
+            if (isLetterOpen) return;
+            isLetterOpen = true;
+
+            const envelope = document.getElementById('envelope');
+            const closedContent = document.getElementById('envelope-closed-content');
+            const letterContent = document.getElementById('letter-content');
+
+            closedContent.classList.add('hidden');
+            letterContent.classList.remove('hidden');
+            envelope.classList.remove('cursor-pointer', 'text-center');
+            envelope.classList.add('bg-white/95', 'shadow-xl');
+
+            triggerHeartConfetti();
+        }
+
+        /* -------------------------------------------------------------
+           4. PHOTO HEART REACTION
+        ------------------------------------------------------------- */
+        function likePhoto(btn, event) {
+            if (event) event.stopPropagation();
+            btn.classList.add('scale-125', 'bg-rose-500', 'text-white');
+            btn.classList.remove('bg-white/80', 'text-rose-500');
+            
+            setTimeout(() => {
+                btn.classList.remove('scale-125');
+            }, 300);
+
+            triggerHeartConfetti();
+            showToast('Love sent to this sweet memory! 💖✨');
+        }
+
+        /* -------------------------------------------------------------
+           5. CUSTOM TOAST NOTIFICATION
+        ------------------------------------------------------------- */
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('custom-toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+            toast.classList.remove('hidden');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        /* -------------------------------------------------------------
+           6. MAKE A WISH HANDLER
+        ------------------------------------------------------------- */
+        function sendWish() {
+            const input = document.getElementById('wish-input');
+            if (input.value.trim() === '') {
+                showToast('Tulis dulu dong doa atau keinginan manis kamu! ✨');
+                return;
+            }
+            
+            triggerHeartConfetti();
+            showToast('Yay! Wish kamu sudah terhembus ke bintang-bintang! Semoga terwujud ya, Fitri! 🌟💖');
+            input.value = '';
+        }
+
+        /* -------------------------------------------------------------
+           7. CONFETTI & HEART CONFETTI CANNON
+        ------------------------------------------------------------- */
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 60,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FFB6C1', '#FFD1DC', '#E6E6FA', '#F472B6', '#FBBF24']
+                });
+            }
+        }
+
+        function triggerHeartConfetti() {
+            if (typeof confetti === 'function') {
+                const heartShape = confetti.shapeFromText ? confetti.shapeFromText({ text: '💖', scalar: 2 }) : 'circle';
+                confetti({
+                    particleCount: 45,
+                    spread: 80,
+                    origin: { y: 0.7 },
+                    shapes: [heartShape, 'circle'],
+                    colors: ['#FF69B4', '#FFB6C1', '#FF1493', '#FFD1DC']
+                });
+            }
+        }
+
+        /* -------------------------------------------------------------
+           8. WEB AUDIO SYNTHESIZER (CUTE BACKGROUND CHIMES)
+        ------------------------------------------------------------- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let audioInterval = null;
+
+        const cuteNotes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25]; // C5 major scale
+
+        function playTone(freq) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.2);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        function toggleAudio() {
+            const icon = document.getElementById('music-icon');
+            
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (isPlaying) {
+                clearInterval(audioInterval);
+                isPlaying = false;
+                icon.className = 'fas fa-music text-lg';
+            } else {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isPlaying = true;
+                icon.className = 'fas fa-pause text-lg text-rose-500 animate-pulse';
+                
+                // Play soft relaxing melodic chime patterns
+                audioInterval = setInterval(() => {
+                    const randomNote = cuteNotes[Math.floor(Math.random() * cuteNotes.length)];
+                    playTone(randomNote);
+                }, 400);
+            }
+        }
+    </script>
+</body>
+</html>
